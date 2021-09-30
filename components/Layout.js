@@ -8,12 +8,13 @@ import useStyle from "../utils/styles";
 import NextLink from "next/link";
 import { Link } from "@mui/material";
 
-export default function Layout({ children }) {
+export default function Layout({ title, description, children }) {
   const cssClass = useStyle();
   return (
     <div>
       <Head>
-        <title>Amazona</title>
+        <title>{title ? `${title} - Next Amazona}` : "Amazona"}</title>
+        {description && <meta name="description" value={description} />}
       </Head>
       <AppBar position="static" className={cssClass.navbar}>
         <Toolbar>
