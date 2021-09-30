@@ -3,7 +3,7 @@ const data = {
     {
       slug: "free-shirt",
       name: "Free shirt",
-      catergory: "Shirts",
+      category: "Shirts",
       image: "/images/p1.jpg",
       price: 70,
       brand: "Nike",
@@ -15,7 +15,7 @@ const data = {
     {
       slug: "slim-shirt",
       name: "Slim shirt",
-      catergory: "Shirts",
+      category: "Shirts",
       image: "/images/p3.jpg",
       price: 80,
       brand: "Reebok",
@@ -27,7 +27,7 @@ const data = {
     {
       slug: "golf-pants",
       name: "Golf pants",
-      catergory: "Pants",
+      category: "Pants",
       image: "/images/p3.jpg",
       price: 70,
       brand: "BrownPants",
@@ -39,7 +39,7 @@ const data = {
     {
       slug: "basketball-pants",
       name: "Basckeball pants",
-      catergory: "Pants",
+      category: "Pants",
       image: "/images/p4.jpg",
       price: 70,
       brand: "Nike",
@@ -51,7 +51,7 @@ const data = {
     {
       slug: "classic-pants",
       name: "Classic Pants",
-      catergory: "Pants",
+      category: "Pants",
       image: "/images/p4.jpg",
       price: 70,
       brand: "Nike",
