@@ -17,7 +17,7 @@ const data = {
       name: "Slim shirt",
       category: "Shirts",
       image: "/images/p3.jpg",
-      price: 80,
+      price: 180,
       brand: "Reebok",
       rating: 4.5,
       numReviews: 10,
