@@ -11,15 +11,16 @@ import {
 
 import Layout from "../components/Layout";
 
-import data from "../utils/data";
 import NextLink from "next/link";
-export default function Home() {
+import db from "../utils/db";
+import Product from "../models/Product";
+export default function Home({ products }) {
   return (
     <Layout>
       <div>
         <h1>Products</h1>
         <Grid container spacing={3}>
-          {data.products.map((product) => {
+          {products.map((product) => {
             return (
               <Grid item md={4} key={product.name}>
                 <Card>
@@ -49,4 +50,12 @@ export default function Home() {
       </div>
     </Layout>
   );
+}
+
+export async function getServerSideProps() {
+  await db.connect();
+  const products = await Product.find({}).lean();
+  console.log(products);
+  await db.disconnect();
+  return { props: { products: products.map(db.convertDocToObj) } };
 }
