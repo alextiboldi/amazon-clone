@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import useStyle from "../utils/styles";
 import NextLink from "next/link";
-import { CssBaseline, Link, ThemeProvider, Switch } from "@mui/material";
+import { CssBaseline, Link, ThemeProvider, Switch, Badge } from "@mui/material";
 import { createTheme } from "@mui/material";
 import { Store } from "../utils/Store";
 import Cookies from "js-cookie";
@@ -14,7 +14,7 @@ import Cookies from "js-cookie";
 export default function Layout({ title, description, children }) {
   const { state, dispatch } = useContext(Store);
 
-  const { darkMode } = state;
+  const { darkMode, cart } = state;
   const cssClass = useStyle();
 
   console.log("DarkMode " + JSON.stringify(darkMode));
@@ -70,7 +70,18 @@ export default function Layout({ title, description, children }) {
                 onChange={darkModeChangeHandler}
               ></Switch>
               <NextLink href="/cart" passHref>
-                <Link>Cart</Link>
+                <Link>
+                  {cart.cartItems.length > 0 ? (
+                    <Badge
+                      color="secondary"
+                      badgeContent={cart.cartItems.length}
+                    >
+                      Cart
+                    </Badge>
+                  ) : (
+                    "Cart"
+                  )}
+                </Link>
               </NextLink>
               <NextLink href="/login" passHref>
                 <Link>Login</Link>
