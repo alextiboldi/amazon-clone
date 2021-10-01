@@ -1,17 +1,25 @@
-import React from "react";
-import Head from "next/Head";
+import React, { useContext } from "react";
+import Head from "next/head";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import useStyle from "../utils/styles";
 import NextLink from "next/link";
-import { CssBaseline, Link, ThemeProvider } from "@mui/material";
+import { CssBaseline, Link, ThemeProvider, Switch } from "@mui/material";
 import { createTheme } from "@mui/material";
+import { Store } from "../utils/Store";
+import Cookies from "js-cookie";
 
 export default function Layout({ title, description, children }) {
+  const { state, dispatch } = useContext(Store);
+
+  const { darkMode } = state;
+  const cssClass = useStyle();
+
+  console.log("DarkMode " + JSON.stringify(darkMode));
   const theme = createTheme({
-    typograph: {
+    typography: {
       h1: {
         fontSize: "1.6rem",
         fontWeight: 400,
@@ -22,13 +30,9 @@ export default function Layout({ title, description, children }) {
         fontWeight: 400,
         margin: "1rem 0",
       },
-      body1: {
-        fontWeight: "normal",
-      },
     },
-
     palette: {
-      type: "light",
+      type: "dark",
       primary: {
         main: "#f0c000",
       },
@@ -37,7 +41,13 @@ export default function Layout({ title, description, children }) {
       },
     },
   });
-  const cssClass = useStyle();
+
+  const darkModeChangeHandler = () => {
+    dispatch({ type: darkMode ? "DARK_MODE_OFF" : "DARK_MODE_ON" });
+    const newDarkMode = !darkMode;
+    Cookies.set("darkMode", newDarkMode ? "ON" : "OFF");
+  };
+
   return (
     <div>
       <Head>
@@ -53,7 +63,12 @@ export default function Layout({ title, description, children }) {
                 <Typography className={cssClass.brand}>amazona</Typography>
               </Link>
             </NextLink>
-            <div className={cssClass.grow}>
+            <div className={cssClass.grow}></div>
+            <div>
+              <Switch
+                checked={darkMode}
+                onChange={darkModeChangeHandler}
+              ></Switch>
               <NextLink href="/cart" passHref>
                 <Link>Cart</Link>
               </NextLink>
