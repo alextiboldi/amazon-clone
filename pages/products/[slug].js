@@ -17,10 +17,13 @@ import {
 import useStyles from "../../utils/styles";
 import Image from "next/image";
 import axios from "axios";
+import { useRouter } from "next/router";
+
 export default function ProductScreen({ product }) {
   const { dispatch } = useContext(Store);
   const clsClasses = useStyles();
 
+  const router = useRouter();
   if (!product) return <div>Product not found</div>;
 
   const addToCartHandler = async () => {
@@ -30,6 +33,7 @@ export default function ProductScreen({ product }) {
       return;
     }
     dispatch({ type: "CART_ADD_ITEM", payload: { ...product, quantity: 1 } });
+    router.push("/cart");
   };
 
   return (
