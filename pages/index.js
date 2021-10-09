@@ -8,13 +8,34 @@ import {
   CardActions,
   Button,
 } from "@mui/material";
-
+import { useContext } from "react";
 import Layout from "../components/Layout";
-
+import axios from "axios";
 import NextLink from "next/link";
 import db from "../utils/db";
 import Product from "../models/Product";
+import { useRouter } from "next/router";
+import { Store } from "../utils/Store";
+
 export default function Home({ products }) {
+  const { dispatch, state } = useContext(Store);
+  const router = useRouter();
+
+  const addToCartHandler = async (product) => {
+    const existingItem = state.cart.cartItems.find(
+      (x) => x._id === product._id
+    );
+    const qty = existingItem ? existingItem.quantity + 1 : 1;
+    const { data } = await axios.get(`/api/products/${product._id}`);
+    if (data.countInStock < qty) {
+      window.alert("Sorry product is out of stock");
+      return;
+    }
+
+    dispatch({ type: "CART_ADD_ITEM", payload: { ...product, quantity: qty } });
+    router.push("/cart");
+  };
+
   return (
     <Layout>
       <div>
@@ -38,7 +59,13 @@ export default function Home({ products }) {
                   </NextLink>
                   <CardActions>
                     <Typography>${product.price}</Typography>
-                    <Button size="small" color="primary">
+                    <Button
+                      size="small"
+                      color="primary"
+                      onClick={() => {
+                        addToCartHandler(product);
+                      }}
+                    >
                       Add to cart
                     </Button>
                   </CardActions>
