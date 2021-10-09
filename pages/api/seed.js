@@ -1,6 +1,7 @@
 import nc from "next-connect";
 import db from "../../utils/db";
 import Product from "../../models/Product";
+import User from "../../models/User";
 import data from "../../utils/data";
 const handler = nc();
 
@@ -9,6 +10,9 @@ export default handler.get(async (req, res) => {
 
   await Product.deleteMany();
   await Product.insertMany(data.products);
+
+  await User.deleteMany();
+  await User.insertMany(data.users);
 
   await db.disconnect();
   res.status(200).json({ message: "seeded successfully" });
