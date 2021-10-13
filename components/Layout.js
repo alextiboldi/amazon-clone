@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import Head from "next/head";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
@@ -6,17 +6,26 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import useStyle from "../utils/styles";
 import NextLink from "next/link";
-import { CssBaseline, Link, ThemeProvider, Switch, Badge } from "@mui/material";
+import {
+  CssBaseline,
+  Link,
+  ThemeProvider,
+  Switch,
+  Badge,
+  Button,
+  Menu,
+  MenuItem,
+} from "@mui/material";
 import { createTheme } from "@mui/material";
 import { Store } from "../utils/Store";
 import Cookies from "js-cookie";
+import { useRouter } from "next/router";
 
 export default function Layout({ title, description, children }) {
   const { state, dispatch } = useContext(Store);
-
-  const { darkMode, cart } = state;
+  const { darkMode, cart, userInfo } = state;
   const cssClass = useStyle();
-
+  const router = useRouter();
   console.log("DarkMode " + JSON.stringify(darkMode));
   const theme = createTheme({
     typography: {
@@ -46,6 +55,24 @@ export default function Layout({ title, description, children }) {
     dispatch({ type: darkMode ? "DARK_MODE_OFF" : "DARK_MODE_ON" });
     const newDarkMode = !darkMode;
     Cookies.set("darkMode", newDarkMode ? "ON" : "OFF");
+  };
+
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const handleMenuOpen = (e) => {
+    setAnchorEl(e.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    setAnchorEl(null);
+    Cookies.remove("userInfo");
+    Cookies.remove("cartItems");
+    dispatch({ type: "USER_LOGOUT", payload: {} });
+    router.push("/");
   };
 
   return (
@@ -83,9 +110,37 @@ export default function Layout({ title, description, children }) {
                   )}
                 </Link>
               </NextLink>
-              <NextLink href="/login" passHref>
-                <Link>Login</Link>
-              </NextLink>
+              {userInfo ? (
+                <>
+                  <Button
+                    id="basic-button"
+                    aria-controls="basic-menu"
+                    aria-haspopup="true"
+                    aria-expanded={open ? "true" : undefined}
+                    onClick={handleMenuOpen}
+                    className={cssClass.navbarButton}
+                  >
+                    {userInfo.name}
+                  </Button>
+                  <Menu
+                    id="basic-menu"
+                    anchorEl={anchorEl}
+                    open={open}
+                    onClose={handleMenuClose}
+                    MenuListProps={{
+                      "aria-labelledby": "basic-button",
+                    }}
+                  >
+                    <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+                    <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+                    <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                  </Menu>
+                </>
+              ) : (
+                <NextLink href="/login" passHref>
+                  <Link>Login</Link>
+                </NextLink>
+              )}
             </div>
           </Toolbar>
         </AppBar>
