@@ -6,12 +6,12 @@ import { signToken } from "../../../utils/auth";
 const handler = nc();
 
 export default handler.post(async (req, res) => {
+  console.log(`Loging in ${req.body.email} `);
+
   await db.connect();
 
   const user = await User.findOne({ email: req.body.email });
   await db.disconnect();
-
-  console.log(`Checking password for ${req.body.email} `);
 
   if (user && bcrypt.compareSync(req.body.password, user.password)) {
     const token = signToken(user);
